@@ -1,0 +1,23 @@
+<configuration debug="false">
+    <statusListener class="ch.qos.logback.core.status.NopStatusListener"/>
+    <property name="package" value="moe.sdl.analyzer.qqdb.*"/>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <withJansi>true</withJansi>
+        <encoder>
+            <pattern>%highlight(%.-1level) %highlight(%msg) %n</pattern>
+        </encoder>
+        <!--Allowlist Filter-->
+        <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+            <evaluator>
+                <expression>return logger.matches("^" + "${package}".replaceAll("\\*",
+                    "\\.*").replaceAll("([^\\\\])\\.", "$1\\\\.") + "$");
+                </expression>
+            </evaluator>
+            <OnMismatch>DENY</OnMismatch>
+            <OnMatch>NEUTRAL</OnMatch>
+        </filter>
+    </appender>
+    <root level="info">
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>
